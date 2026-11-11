@@ -24,15 +24,6 @@ public:
 private:
 	void ChangePhase();
 
-	
-	// BGM/SE用メンバ変数
-	uint32_t bgmHandle_ = 0;
-	uint32_t voiceHandle_ = 0;
-
-	// SE用メンバ変数
-	uint32_t soundEnemyDeadHandle_ = 0; // 敵撃破SE
-	uint32_t soundGuardHandle_ = 0;     // ガードSE
-	uint32_t soundPlayerDeadHandle_ = 0;
 
 
 	// カメラ
@@ -44,9 +35,7 @@ private:
 	// プレイヤー
 	Player* mPlayer = nullptr;
 	KamataEngine::Model* mPlayerModel = nullptr;
-	KamataEngine::Model* mPlayerAttackModel = nullptr;
 
-	
 
 	// 追従カメラ
 	CameraController* cameraController_ = nullptr;

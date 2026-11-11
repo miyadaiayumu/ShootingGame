@@ -3,42 +3,7 @@
 
 using namespace KamataEngine;
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
-	Matrix4x4 matrix{};
-
-	float cosX = cosf(rotate.x);
-	float sinX = sinf(rotate.x);
-	float cosY = cosf(rotate.y);
-	float sinY = sinf(rotate.y);
-	float cosZ = cosf(rotate.z);
-	float sinZ = sinf(rotate.z);
-
-	matrix.m[0][0] = scale.x * (cosY * cosZ);
-	matrix.m[0][1] = scale.x * (cosY * sinZ);
-	matrix.m[0][2] = scale.x * (-sinY);
-	matrix.m[0][3] = 0.0f;
-
-	matrix.m[1][0] = scale.y * (sinX * sinY * cosZ - cosX * sinZ);
-	matrix.m[1][1] = scale.y * (sinX * sinY * sinZ + cosX * cosZ);
-	matrix.m[1][2] = scale.y * (sinX * cosY);
-	matrix.m[1][3] = 0.0f;
-
-	matrix.m[2][0] = scale.z * (cosX * sinY * cosZ + sinX * sinZ);
-	matrix.m[2][1] = scale.z * (cosX * sinY * sinZ - sinX * cosZ);
-	matrix.m[2][2] = scale.z * (cosX * cosY);
-	matrix.m[2][3] = 0.0f;
-
-	matrix.m[3][0] = translate.x;
-	matrix.m[3][1] = translate.y;
-	matrix.m[3][2] = translate.z;
-	matrix.m[3][3] = 1.0f;
-
-	return matrix;
-}
-
 GameScene::~GameScene() {
-	// ===== BGMの停止 =====
-	Audio::GetInstance()->StopWave(voiceHandle_);
 
 	delete mPlayer;
 	mPlayer = nullptr;
@@ -66,16 +31,14 @@ void GameScene::Initialize() {
 
 	mDebugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 
+	// プレイヤーモデル読み込み
+	mPlayerModel = Model::CreateFromOBJ("Player");
 
-	// ===== BGMの読み込みと再生 =====
-	bgmHandle_ = Audio::GetInstance()->LoadWave("music/play.mp3");
-	voiceHandle_ = Audio::GetInstance()->PlayWave(bgmHandle_, true);
-	Audio::GetInstance()->SetVolume(voiceHandle_, 0.5f);
+	// プレイヤー生成
+	mPlayer = new Player();
 
-	// ===== SEの読み込み =====
-	soundEnemyDeadHandle_ = Audio::GetInstance()->LoadWave("sound/enemyDead.mp3");
-	soundGuardHandle_ = Audio::GetInstance()->LoadWave("sound/guard.mp3");
-	soundPlayerDeadHandle_ = Audio::GetInstance()->LoadWave("sound/death.mp3");
+	// プレイヤー初期化
+	mPlayer->Initialize(mPlayerModel, &mMainCamera, {0.0f, 0.0f, 0.0f});
 
 
 	// ===== カメラコントロール =====
@@ -93,9 +56,6 @@ void GameScene::Update() {
 	
 		mPlayer->Update();
 
-
-		uint32_t handle = Audio::GetInstance()->PlayWave(soundPlayerDeadHandle_, false);
-		Audio::GetInstance()->SetVolume(handle, 0.7f);
 
 
 	// --- カメラの更新処理 ---

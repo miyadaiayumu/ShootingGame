@@ -2,31 +2,45 @@
 #include "Player.h"
 #include <algorithm>
 
+using namespace KamataEngine;
 
 void CameraController::Initialize() {
 	camera_.Initialize();
 
+	// カメラの初期位置
+	camera_.translation_ = {0.0f, 20.0f, -30.0f};
+
+	// カメラの角度
+	camera_.rotation_ = {0.8f, 0.0f, 0.0f};
+
+	camera_.UpdateMatrix();
 }
 
 void CameraController::Update() {
-	
 
 	// 本来の移動位置を一時保存
-	KamataEngine::Vector3 baseTranslation = camera_.translation_;
+	Vector3 baseTranslation = camera_.translation_;
 
-	// ビュー行列の更新（これで camera_.matView にシェイク位置が計算される）
+	// ビュー行列の更新
 	camera_.UpdateMatrix();
 
-	// 次フレームの追従計算が破綻しないよう本来の基本位置に戻す
+	// 本来の位置に戻す
 	camera_.translation_ = baseTranslation;
 }
 
 void CameraController::Reset() {
-	if (!target_)
+
+	// プレイヤーが存在しない場合
+	if (!target_) {
 		return;
+	}
 
+	// カメラの位置
+	camera_.translation_ = {0.0f, 20.0f, -30.0f};
 
-	camera_.translation_ = targetPosition_;
+	// カメラの角度
+	camera_.rotation_ = {0.8f, 0.0f, 0.0f};
+
 	camera_.UpdateMatrix();
 }
 
