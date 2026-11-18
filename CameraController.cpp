@@ -4,44 +4,51 @@
 
 using namespace KamataEngine;
 
+CameraController::~CameraController() {}
+
 void CameraController::Initialize() {
 	camera_.Initialize();
 
-	// カメラの初期位置
-	camera_.translation_ = {0.0f, 20.0f, -30.0f};
-
-	// カメラの角度
+	// カメラの角度（見下ろし）
 	camera_.rotation_ = {0.8f, 0.0f, 0.0f};
 
-	camera_.UpdateMatrix();
-}
-
-void CameraController::Update() {
-
-	// 本来の移動位置を一時保存
-	Vector3 baseTranslation = camera_.translation_;
-
-	// ビュー行列の更新
-	camera_.UpdateMatrix();
-
-	// 本来の位置に戻す
-	camera_.translation_ = baseTranslation;
+	ApplyToCamera();
 }
 
 void CameraController::Reset() {
-
-	// プレイヤーが存在しない場合
 	if (!target_) {
 		return;
 	}
 
-	// カメラの位置
-	camera_.translation_ = {0.0f, 20.0f, -30.0f};
+	// 補間なしで一気にプレイヤーの位置へ
+	focusPosition_ = ClampToArea(target_->GetWorldPosition());
+	ApplyToCamera();
+}
 
-	// カメラの角度
-	camera_.rotation_ = {0.8f, 0.0f, 0.0f};
+void CameraController::Update() {
+	if (target_) {
+		Vector3 goal = ClampToArea(target_->GetWorldPosition());
 
+		// 目標へ少しずつ近づく
+		focusPosition_.x += (goal.x - focusPosition_.x) * kInterpolationRate;
+		focusPosition_.z += (goal.z - focusPosition_.z) * kInterpolationRate;
+	}
+
+	ApplyToCamera();
+}
+
+void CameraController::ApplyToCamera() {
+	camera_.translation_ = {
+	    focusPosition_.x + cameraOffset_.x,
+	    cameraOffset_.y,
+	    focusPosition_.z + cameraOffset_.z,
+	};
 	camera_.UpdateMatrix();
 }
 
-CameraController::~CameraController() {}
+Vector3 CameraController::ClampToArea(const Vector3& pos) const {
+	Vector3 result = pos;
+	result.x = std::clamp(result.x, movableArea_.left, movableArea_.right);
+	result.z = std::clamp(result.z, movableArea_.bottom, movableArea_.top);
+	return result;
+}

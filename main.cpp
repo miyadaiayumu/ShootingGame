@@ -57,7 +57,7 @@ void DrawScene() {
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	// Kamata Engine の初期化
-	KamataEngine::Initialize(L"LE2C_25_ミヤダイ_アユム");
+	KamataEngine::Initialize(L"LE2C_28_ミヤダイ_アユム");
 
 	DirectXCommon* dxCommonPtr = DirectXCommon::GetInstance();
 
