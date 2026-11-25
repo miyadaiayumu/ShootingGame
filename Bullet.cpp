@@ -13,7 +13,7 @@ void Bullet::Initialize(Model* model, Camera* camera, const Vector3& position, c
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.scale_ = {0.3f, 0.3f, 0.3f}; // 小さいキューブ
+	worldTransform_.scale_ = {kScale, kScale, kScale}; // 細長い弾のモデルを縮小して使う
 	worldTransform_.rotation_.y = std::atan2(direction.x, direction.z);
 	UpdateWorldMatrix(worldTransform_);
 

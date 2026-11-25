@@ -164,14 +164,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="ClearScene.cpp" />
+    <ClCompile Include="DeathEffect.cpp" />
+    <ClCompile Include="Drop.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="LevelUpMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChipField.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScreenUtil.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="WorldMatrixUtil.cpp" />
   </ItemGroup>
@@ -274,13 +282,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="ClearScene.h" />
+    <ClInclude Include="DeathEffect.h" />
+    <ClInclude Include="Drop.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="LevelUpMenu.h" />
     <ClInclude Include="MapChipField.h" />
     <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="MouseInput.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenUtil.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="WorldMatrixUtil.h" />
   </ItemGroup>

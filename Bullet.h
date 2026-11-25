@@ -20,6 +20,7 @@ private:
 
 	KamataEngine::Vector3 velocity_{};
 
+	static inline const float kScale = 0.7f; // モデルの大きさの倍率
 	static inline const float kSpeed = 0.6f;
 	static inline const int kLifeTime = 120; // フレーム
 

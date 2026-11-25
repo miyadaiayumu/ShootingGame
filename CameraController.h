@@ -3,8 +3,10 @@
 
 class Player;
 
+// プレイヤーに追従する見下ろしカメラ
 class CameraController {
 public:
+	// 追従する「注視点」が動ける範囲（ワールドXZ）
 	struct Rect {
 		float left = 0.0f;
 		float right = 1.0f;
@@ -24,16 +26,19 @@ public:
 	const KamataEngine::Camera& GetCamera() const { return camera_; }
 
 private:
+	// 注視点 + オフセットをカメラ位置に反映して行列を更新
 	void ApplyToCamera();
-
+	// 注視点を移動可能範囲に収める
 	KamataEngine::Vector3 ClampToArea(const KamataEngine::Vector3& pos) const;
 
 	KamataEngine::Camera camera_{};
 	const Player* target_ = nullptr;
 
+	// 注視点（プレイヤーを滑らかに追う）
 	KamataEngine::Vector3 focusPosition_{};
 
-	KamataEngine::Vector3 cameraOffset_ = {0.0f, 20.0f, -30.0f};
+	// 注視点からのカメラ位置のずれ
+	KamataEngine::Vector3 cameraOffset_ = {0.0f, 17.0f, -16.5f};
 
 	Rect movableArea_ = {-100.0f, 100.0f, -100.0f, 100.0f};
 

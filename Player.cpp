@@ -23,16 +23,29 @@ void Player::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera
 	mWorldTransform.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	UpdateWorldMatrix(mWorldTransform);
 
-	hp_ = kMaxHp;
+	maxHp_ = kInitialMaxHp;
+	hp_ = kInitialMaxHp;
+	moveSpeed_ = kBaseMoveSpeed;
 	invincibleTimer_ = 0;
 }
 
 void Player::Reset(const KamataEngine::Vector3& position) {
 	mWorldTransform.translation_ = position;
-	hp_ = kMaxHp;
+	mWorldTransform.rotation_.y = std::numbers::pi_v<float> / 2.0f;
+	maxHp_ = kInitialMaxHp;
+	hp_ = kInitialMaxHp;
+	moveSpeed_ = kBaseMoveSpeed;
 	invincibleTimer_ = 0;
 	velocity_ = {0.0f, 0.0f, 0.0f};
 	UpdateWorldMatrix(mWorldTransform);
+}
+
+void Player::AddMaxHp() {
+	if (maxHp_ >= kMaxHpLimit) {
+		return;
+	}
+	++maxHp_;
+	hp_ = std::min(hp_ + 1, maxHp_);
 }
 
 bool Player::TakeDamage(int damage) {
@@ -84,6 +97,18 @@ void Player::Update() {
 	if (length > 0.0f) {
 		velocity_.x /= length;
 		velocity_.z /= length;
+
+		// 入力した方向へ、なめらかに向きを変える（最短の回り方で）
+		float targetYaw = std::atan2(velocity_.x, velocity_.z);
+		float diff = targetYaw - mWorldTransform.rotation_.y;
+		const float kPi = std::numbers::pi_v<float>;
+		while (diff > kPi) {
+			diff -= 2.0f * kPi;
+		}
+		while (diff < -kPi) {
+			diff += 2.0f * kPi;
+		}
+		mWorldTransform.rotation_.y += diff * kTurnRate;
 	}
 
 	// 座標に移動量を反映（X・Zを別々に判定して壁沿いにスライド）
@@ -105,6 +130,10 @@ void Player::Update() {
 
 // ===== 描画処理 =====
 void Player::Draw() {
+	// 倒れたあとは表示しない（死亡エフェクトに切り替わる）
+	if (hp_ <= 0) {
+		return;
+	}
 	// 無敵中は点滅（4フレームごとに表示/非表示）
 	if (invincibleTimer_ > 0 && (invincibleTimer_ / 4) % 2 == 0) {
 		return;
